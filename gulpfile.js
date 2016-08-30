@@ -4,7 +4,8 @@ var uglify = require('gulp-uglify'); //JS压缩
 var less = require('gulp-less'); //编译LESS文件
 var autoprefixer = require('gulp-autoprefixer'); //自动为CSS添加前缀
 var minifyCss = require('gulp-minify-css'); //CSS压缩
-var imagemin = require('gulp-imagemin');    //图片压缩
+var imagemin = require('gulp-imagemin'); //图片压缩
+var htmlmin = require('gulp-htmlmin'); //html 压缩
 
 var concat = require('gulp-concat'); //合并
 var rev = require('gulp-rev'); //添加MD5后缀
@@ -84,19 +85,58 @@ gulp.task('watch', function() {
     gulp.watch('src/image/**/*)', ['image']);
 })
 
-// 清理临时文件
-gulp.task('clean', function(){
-    return  gulp.src('temp', {read: false})
-                .pipe(clean());
-})
-
-gulp.task('rev', function(){
-    gulp.src('temp/**/*')
-        .pipe(rev())
-        .pipe(rev.manifest())
+// 移动替换 bower_components 中的 js css
+var bower_js = ['bower_components/jquery/dist/jquery.js'],
+    bower_css = [];
+var node_js = [],
+    node_css = ['node_modules/normalizecss/normalize.css'];
+gulp.task('adjust_bower_reference', function() {
+    gulp.src(bower_js).pipe(gulp.dest('temp/js')); //移动引用的 bower_components 中的 js 文件
+    gulp.src(bower_css).pipe(gulp.dest('temp/css')); //移动引用的 bower_components 中的 css 文件
+    gulp.src(node_js).pipe(gulp.dest('temp/js')); //移动引用的 node_modules 中的 js 文件
+    gulp.src(node_css).pipe(gulp.dest('temp/css')); //移动引用的 node_modules 中的 css 文件
+    gulp.src(['src/rev-manifest.json', 'temp/*.html'])
+        .pipe(revCollector())
         .pipe(gulp.dest('temp'));
 })
 
+// 清理临时文件 temp
+gulp.task('clean', function() {
+    return gulp.src('dist', { read: false })
+        .pipe(clean());
+})
 
-gulp.task('copy', gulpsync.sync(['html', 'less', 'js', 'image']));
+gulp.task('copy', gulpsync.sync(['html', 'less', 'js', 'image', 'adjust_bower_reference']));
 gulp.task('dev', gulpsync.async(['server', 'copy', 'watch']));
+
+
+// 压缩所有文件
+gulp.task('dist-html', function() {
+    gulp.src('temp/*.html')
+        .pipe(htmlmin({
+            collapseWhitespace: true,
+            collapseBooleanAttributes: true,
+            removeComments: true,
+            removeEmptyAttributes: true,
+            removeScriptTypeAttributes: true,
+            removeStyleLinkTypeAttributes: true,
+            minifyJS: true,
+            minifyCSS: true
+        }))
+        .pipe(gulp.dest('dist'));
+})
+gulp.task('dist-css', function() {
+    gulp.src('temp/css/**/*')
+        .pipe(minifyCss())
+        .pipe(gulp.dest('dist/css'));
+})
+gulp.task('dist-js', function() {
+    gulp.src('temp/js/**/*')
+        .pipe(uglify())
+        .pipe(gulp.dest('dist/js'));
+})
+gulp.task('dist-image', function() {
+    gulp.src('temp/image/**/*')
+        .pipe(gulp.dest('dist/image'));
+})
+gulp.task('dist', gulpsync.sync(['dist-html', 'dist-css', 'dist-js', 'dist-image']));

@@ -1,0 +1,4 @@
+{
+  "../bower_components/jquery/dist/jquery.js": "js/jquery.js",
+  "../node_modules/normalizecss/normalize.css": "css/normalize.css"
+}
