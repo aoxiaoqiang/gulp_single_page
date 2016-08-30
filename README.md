@@ -10,7 +10,6 @@ gulp-minify-css		//CSS压缩
 gulp-imagemin		//图片压缩
 gulp-htmlmin		//html 压缩
 
-
 gulp-concat			//合并文件(js 或者 css)
 
 gulp-rev			//添加MD5后缀
