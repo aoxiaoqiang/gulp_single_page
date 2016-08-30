@@ -1,0 +1,23 @@
+{
+  "name": "static",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "aoxiaoqiang"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "static"
+  ],
+  "homepage": "https://github.com/aoxiaoqiang/gulp_single_page",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "2.1.4"
+  }
+}
