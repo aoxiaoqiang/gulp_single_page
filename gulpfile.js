@@ -24,6 +24,7 @@ var clean = require('gulp-clean'); //清除文件
 //         .pipe(rev.manifest())
 //         .pipe(gulp.dest('build/rev'));
 // })
+
 // 路径替换
 // gulp.task('rev', function(){
 //     gulp.src(['build/rev/*.json', 'src/demo.html'])
@@ -53,9 +54,9 @@ gulp.task('less', function() {
     return gulp.src('src/less/*.less')
         .pipe(less())
         .pipe(autoprefixer({
-            browsers: ['last 2 versions', 'Android >= 4.0'],
+            browsers: ['last 7 versions'],
             cascade: true, //对齐样式
-            remove: true //移除无用的样式
+            remove: false //移除无用的样式
         }))
         .pipe(gulp.dest('temp/css'))
         .pipe(connect.reload());
