@@ -18,5 +18,4 @@ gulp-rev-collector	//路径替换
 gulp-clean			//清除文件
 ```
 
-
-常用样式表[https://github.com/aoxiaoqiang/gulp_single_page/blob/master/src/common.css.md]
+[常用样式表](https://github.com/aoxiaoqiang/gulp_single_page/blob/master/src/common.css.md)
